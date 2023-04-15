@@ -1,0 +1,11 @@
+we walk through how to create the Lambda function and configure it to trigger from SQS. We then use a Python script on an EC2 instance to send a high volume of messages to an SQS queue. We also verify the Lambda function is being invoked and the messages are being saved in DynamoDB.
+
+E-commerce platform: A Lambda function can be triggered by an SQS queue containing incoming orders, and store them in DynamoDB for later processing. This can help ensure that orders are processed in a timely manner and can help track sales data.
+
+Data pipeline: You might have a data pipeline where you're ingesting large amounts of data from different sources. Using SQS to queue up data to be processed and a Lambda function to process the data and store it in DynamoDB can help simplify the pipeline and make it more efficient.
+
+IoT applications: In an IoT application, you may have devices that send data to an SQS queue, such as temperature readings from sensors. A Lambda function can be triggered by the SQS queue to process the data and store it in DynamoDB for analysis.
+
+Social media platforms: A Lambda function triggered by an SQS queue can help you process incoming posts, comments or messages in real-time, and store them in DynamoDB for later analysis or processing. This can help provide insights into user engagement, sentiment analysis or trending topics.
+
+Overall, the solution of using a Lambda function triggered by an SQS queue to store records in DynamoDB is a common pattern in building scalable and fault-tolerant distributed systems.

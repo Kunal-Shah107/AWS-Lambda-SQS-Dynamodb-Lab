@@ -1,0 +1,81 @@
+STEP BY STEP GUIDE -
+
+we walk through on how to create the Lambda function and configure it to trigger from SQS. We then use a Python script on an EC2 instance to send a high volume of messages to an SQS queue. We also verify the Lambda function is being invoked and the messages are being saved in DynamoDB.
+
+PREREQUISITE
+AWS Account with Admin Access.
+Linux EC2 Instance with Admin IAM role.
+
+AWS Services Usage
+Lambda, SQS, DynamoDB, EC2, IAM, CloudWatch
+
+STEP 1 :
+Navigate to AWS IAM.
+Create a IAM role with name lambda-execution-role
+Attach below mentioned policies to the role
+- AmazonSQSFullAccess
+- AmazonDynamoDBFullAccess
+- CloudWatchLogsFullAccess
+- AWSLambdaExecute
+Trust Relationships is for Lambda
+
+STEP 2 :
+Navigate to AWS SQS.
+Create standard SQS Queue & Name it "Messages"
+Keep other settings as default.
+
+STEP 3 :
+Navigate to AWS DynamoDB.
+Go Tables -> Create Table.
+- Table Name = Message
+- Partition Key = MessageId (String)
+- Table settings = Customize settings
+- Table Class = DynamoDB Standard
+- Read/Write capacity settings = On-demand
+- Encryption at rest = Owned by Amazon DynamoDB
+Click the Create Table button.
+
+STEP 4 :
+Navigate to AWS Lambda.
+Create the Lambda Function.
+On the Create function page, select Author from scratch.
+Under Basic Information, set the following parameters for each field:
+- Function name: Enter SQS-DDB.
+- Runtime: Select Python 3.9 from the dropdown menu.
+- Architecture: Select x86_64.
+- Under Permissions, Select Use an existing role.
+- Under Existing role, select lambda-execution-role from the dropdown menu.(created in step 1)
+- Click the Create function button.
+
+STEP 5 :
+On the Lambda Console our function SQS-DDB is created.
+Click the + Add trigger button to add SQS Trigger.
+Under SQS queue, click the search bar and select Messages.(step 2)
+Ensure that the checkbox next to Activate trigger is checked.
+Click Add button.
+
+STEP 6 :
+Double-click on lambda_function.py from under the Code tab section.
+Copy the Source Code into the Lambda Function from My GitHub Repo.
+Replace the code contents of the function you copied from Github Repo.
+After that click the Deploy button.
+
+STEP 7 :
+Log In to the Linux EC2 Instance which is part of prerequisite.
+Copy the python script to create fake messages from my Github Repo.
+Create a generate_fake_message.py file & paste the code in the file.
+Now run the script as follows to create fake messages which will be pushed to SQS Queue & eventually invoking Lambda Function.
+./generate_fake_message.py -q Messages -i 0.1
+After a few seconds, hit Control + C to stop the command from continuing to run.
+
+STEP 8 :
+Confirm Messages Were Inserted into the DynamoDB Table.
+- Select the Message table.
+- Click Explore table items and review the list of items that were inserted from our script.
+We should soon see a spike in the table Number of Messages Received in SQS Queue Monitoring.
+Congratulations on successfully completing this hands-on AWS lab!
+
+Source code & detailed steps can be found at My Github Repo.
+
+IMP NOTE
+This DEMO/POC might incur some charges if kept active for long time. So please make sure to clean up the environment once done.
